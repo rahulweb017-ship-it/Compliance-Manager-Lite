@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_compliance_record_list" model="ir.ui.view">
+        <field name="name">compliance.record.list</field>
+        <field name="model">compliance.record</field>
+        <field name="arch" type="xml">
+            <list string="Compliance Records"
+                  decoration-success="status == 'valid'"
+                  decoration-warning="status == 'expiring'"
+                  decoration-danger="status == 'expired'">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="responsible_user_id"/>
+                <field name="issue_date" optional="hide"/>
+                <field name="expiry_date"/>
+                <field name="days_remaining"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'valid'"
+                       decoration-warning="status == 'expiring'"
+                       decoration-danger="status == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_compliance_record_form" model="ir.ui.view">
+        <field name="name">compliance.record.form</field>
+        <field name="model">compliance.record</field>
+        <field name="arch" type="xml">
+            <form string="Compliance Record">
+                <sheet>
+                    <widget name="web_ribbon" title="Expired" bg_color="text-bg-danger"
+                            invisible="status != 'expired'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Driver License - John"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="responsible_user_id"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'valid'"
+                                   decoration-warning="status == 'expiring'"
+                                   decoration-danger="status == 'expired'"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="days_remaining"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Additional details..."/>
+                    </group>
+                    <group string="Attachments">
+                        <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_compliance_record_search" model="ir.ui.view">
+        <field name="name">compliance.record.search</field>
+        <field name="model">compliance.record</field>
+        <field name="arch" type="xml">
+            <search string="Compliance Records">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="responsible_user_id"/>
+                <filter name="filter_valid" string="Valid" domain="[('status', '=', 'valid')]"/>
+                <filter name="filter_expiring" string="Expiring Soon" domain="[('status', '=', 'expiring')]"/>
+                <filter name="filter_expired" string="Expired" domain="[('status', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_my" string="My Records"
+                        domain="[('responsible_user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_expiry_date" string="Expiry Date" date="expiry_date"/>
+                <group>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_responsible" string="Responsible" context="{'group_by': 'responsible_user_id'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_expiry" string="Expiry Date" context="{'group_by': 'expiry_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_compliance_record_calendar" model="ir.ui.view">
+        <field name="name">compliance.record.calendar</field>
+        <field name="model">compliance.record</field>
+        <field name="arch" type="xml">
+            <calendar string="Expiries" date_start="expiry_date" color="category_id" mode="month">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="status"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_compliance_record_kanban" model="ir.ui.view">
+        <field name="name">compliance.record.kanban</field>
+        <field name="model">compliance.record</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="status"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_title">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_record_subtitle">
+                                <field name="category_id"/>
+                            </div>
+                            <div>
+                                <span>Expiry: <field name="expiry_date"/></span>
+                            </div>
+                            <div>
+                                <field name="responsible_user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_compliance_record" model="ir.actions.act_window">
+        <field name="name">Compliance Records</field>
+        <field name="res_model">compliance.record</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
+        <field name="search_view_id" ref="view_compliance_record_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first compliance record</p>
+            <p>Track documents and their expiry dates to stay compliant.</p>
+        </field>
+    </record>
+
+    <record id="action_compliance_record_calendar" model="ir.actions.act_window">
+        <field name="name">Calendar</field>
+        <field name="res_model">compliance.record</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="view_compliance_record_search"/>
+    </record>
+
+</odoo>

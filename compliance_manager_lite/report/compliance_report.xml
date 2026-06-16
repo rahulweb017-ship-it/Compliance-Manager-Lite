@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_compliance_record" model="ir.actions.report">
+        <field name="name">Compliance Records</field>
+        <field name="model">compliance.record</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">compliance_manager_lite.report_compliance_record</field>
+        <field name="report_file">compliance_manager_lite.report_compliance_record</field>
+        <field name="binding_model_id" ref="model_compliance_record"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_compliance_record">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Compliance Records</h2>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Responsible</th>
+                                <th>Issue Date</th>
+                                <th>Expiry Date</th>
+                                <th class="text-end">Days Left</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="doc">
+                                <td><span t-field="doc.name"/></td>
+                                <td><span t-field="doc.category_id"/></td>
+                                <td><span t-field="doc.responsible_user_id"/></td>
+                                <td><span t-field="doc.issue_date"/></td>
+                                <td><span t-field="doc.expiry_date"/></td>
+                                <td class="text-end"><span t-field="doc.days_remaining"/></td>
+                                <td>
+                                    <span t-field="doc.status"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_export_compliance_xlsx" model="ir.actions.server">
+        <field name="name">Export to XLSX</field>
+        <field name="model_id" ref="model_compliance_record"/>
+        <field name="binding_model_id" ref="model_compliance_record"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+ids = env.context.get('active_ids', [])
+url = '/compliance/export/xlsx'
+if ids:
+    url += '?ids=' + ','.join(str(i) for i in ids)
+action = {
+    'type': 'ir.actions.act_url',
+    'url': url,
+    'target': 'new',
+}
+        </field>
+    </record>
+
+</odoo>

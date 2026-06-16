@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_compliance_root"
+              name="Compliance Manager"
+              web_icon="compliance_manager_lite,static/description/icon.png"
+              sequence="80"
+              groups="group_compliance_user"/>
+
+    <menuitem id="menu_compliance_dashboard"
+              name="Dashboard"
+              parent="menu_compliance_root"
+              action="action_compliance_dashboard"
+              sequence="10"/>
+
+    <menuitem id="menu_compliance_records"
+              name="Compliance Records"
+              parent="menu_compliance_root"
+              action="action_compliance_record"
+              sequence="20"/>
+
+    <menuitem id="menu_compliance_categories"
+              name="Categories"
+              parent="menu_compliance_root"
+              action="action_compliance_category"
+              groups="group_compliance_manager"
+              sequence="30"/>
+
+    <menuitem id="menu_compliance_calendar"
+              name="Calendar"
+              parent="menu_compliance_root"
+              action="action_compliance_record_calendar"
+              sequence="40"/>
+
+    <menuitem id="menu_compliance_reports"
+              name="Reports"
+              parent="menu_compliance_root"
+              action="action_compliance_record"
+              sequence="50"/>
+
+    <menuitem id="menu_compliance_config"
+              name="Configuration"
+              parent="menu_compliance_root"
+              groups="group_compliance_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_compliance_config_settings"
+              name="Settings"
+              parent="menu_compliance_config"
+              action="action_compliance_config_settings"
+              sequence="10"/>
+
+</odoo>

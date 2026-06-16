@@ -1,0 +1,346 @@
+.o_compliance_dashboard {
+    background-color: #f1f3f9; /* Bright elegant light-mode space background */
+    min-height: 100vh;
+    padding: 2rem !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #334155;
+    position: relative;
+    overflow-x: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 350px;
+        background: radial-gradient(circle at 50% -100px, rgba(99, 102, 241, 0.08) 0%, rgba(241, 243, 249, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    h2.o_cml_title_main {
+        color: #0f172a;
+        font-weight: 800;
+        font-size: 1.8rem;
+        letter-spacing: -0.02em;
+    }
+
+    /* Elegant Light-Mode Glossy Panels */
+    .o_cml_glass_card {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 20px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        z-index: 1;
+
+        &:hover {
+            border-color: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.06), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+        }
+    }
+
+    .o_cml_card_title {
+        color: #1e293b;
+        font-weight: 800;
+    }
+
+    .o_cml_header_btn {
+        color: #6366f1;
+        font-size: 0.82rem;
+        transition: color 0.15s ease;
+        &:hover {
+            color: #4338ca !important;
+        }
+    }
+
+    /* Simple, Elegant Icon Wrappers */
+    .o_cml_card_icon_wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.04);
+        color: #6366f1;
+        font-size: 0.95rem;
+    }
+
+    /* Folder Cards mimicking Devoria's courses cards */
+    .o_cml_folder_card {
+        border-radius: 16px;
+        min-height: 180px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.15) 100%);
+            z-index: 1;
+        }
+
+        &:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        & > * {
+            position: relative;
+            z-index: 2;
+        }
+    }
+
+    /* Gradients mimicking Devoria's courses folder items */
+    .o_cml_folder_0 {
+        background: linear-gradient(135deg, #ff7e53 0%, #e53935 100%);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 6px 18px rgba(249, 115, 22, 0.25);
+    }
+
+    .o_cml_folder_1 {
+        background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 6px 18px rgba(14, 165, 233, 0.25);
+    }
+
+    .o_cml_folder_2 {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 6px 18px rgba(217, 70, 239, 0.25);
+    }
+
+    .o_cml_folder_badge {
+        .badge {
+            background: rgba(255, 255, 255, 0.22) !important;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            font-weight: 700;
+        }
+    }
+
+    .o_cml_folder_progress_txt {
+        font-weight: 800;
+        font-size: 1.15rem;
+        color: #ffffff;
+    }
+
+    .o_cml_folder_docs_txt {
+        font-size: 0.82rem;
+        font-weight: 600;
+        opacity: 0.9;
+    }
+
+    /* Donut chart absolute center labeling */
+    .o_cml_chart_center_text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        text-align: center;
+        line-height: 1.1;
+
+        .o_cml_pct_val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        .o_cml_pct_lbl {
+            font-size: 0.72rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+        }
+    }
+
+    /* Colored legend dots */
+    .o_cml_dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+
+        &.bg-neon-emerald {
+            background-color: #3b82f6;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+        }
+        &.bg-alert-orange {
+            background-color: #a855f7;
+            box-shadow: 0 0 6px rgba(168, 85, 247, 0.4);
+        }
+        &.bg-cyberpunk-purple {
+            background-color: #f43f5e;
+            box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+        }
+    }
+
+    /* Elegant Light-Mode Tables */
+    .o_cml_light_table {
+        background: transparent !important;
+        color: #334155;
+        border-collapse: separate;
+        border-spacing: 0;
+
+        th {
+            color: #475569 !important;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background-color: transparent !important;
+            border-bottom: 2px solid #e2e8f0 !important;
+            padding: 12px 8px !important;
+        }
+
+        tr {
+            transition: all 0.2s ease;
+            background-color: transparent !important;
+
+            &:hover td {
+                background-color: #f8fafc !important;
+            }
+        }
+
+        td {
+            border-bottom: 1px solid #f1f5f9 !important;
+            background-color: transparent !important;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            padding: 14px 8px !important;
+        }
+
+        .o_cml_row_clickable {
+            cursor: pointer;
+        }
+    }
+
+    /* Tasks card list (critical items on right col) */
+    .o_cml_task_bar_card {
+        background: rgba(30, 32, 50, 0.95); /* Deep high-contrast premium slate card like Devoria */
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            border-color: rgba(244, 63, 94, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            transform: translateX(-3px);
+        }
+
+        .progress {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .o_cml_task_title {
+            font-size: 0.92rem;
+            letter-spacing: -0.01em;
+        }
+
+        .o_cml_task_desc {
+            font-size: 0.8rem;
+            color: #94a3b8 !important;
+        }
+    }
+
+    /* Compliance Score Leaderboard (right of category chart) */
+    .o_cml_score_row {
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+    }
+
+    .o_cml_score_ring {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.82rem;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+        &.o_cml_score_high {
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+        }
+        &.o_cml_score_mid {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+        }
+        &.o_cml_score_low {
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+        }
+    }
+
+    .o_cml_score_name {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #1e293b;
+    }
+
+    .o_cml_score_docs {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .o_cml_score_bar {
+        height: 7px;
+        background-color: #eef2f7;
+        border-radius: 6px;
+        overflow: hidden;
+
+        .o_cml_score_fill_high {
+            background: linear-gradient(90deg, #34d399, #059669);
+        }
+        .o_cml_score_fill_mid {
+            background: linear-gradient(90deg, #fbbf24, #d97706);
+        }
+        .o_cml_score_fill_low {
+            background: linear-gradient(90deg, #fb7185, #e11d48);
+        }
+    }
+
+    .min-w-0 {
+        min-width: 0;
+    }
+
+    /* Odoo view adjustment button */
+    .o_cml_view_btn {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        border: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.55rem 1.1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+
+        &:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+        }
+    }
+}

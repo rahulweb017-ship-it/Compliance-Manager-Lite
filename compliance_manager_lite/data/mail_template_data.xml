@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_template_compliance_reminder" model="mail.template">
+        <field name="name">Compliance: Expiry Reminder</field>
+        <field name="model_id" ref="model_compliance_record"/>
+        <field name="subject">Compliance reminder: {{ object.name }} expires in {{ object.days_remaining }} day(s)</field>
+        <field name="email_from">{{ (object.responsible_user_id.company_id.email or user.email or '') }}</field>
+        <field name="email_to">{{ object.responsible_user_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0px;padding:0px;font-size:13px;">
+                <p>Hello <t t-out="object.responsible_user_id.name or ''"/>,</p>
+                <p>
+                    This is a reminder that the following compliance record is approaching its expiry date:
+                </p>
+                <ul>
+                    <li><strong>Name:</strong> <t t-out="object.name or ''"/></li>
+                    <li><strong>Category:</strong> <t t-out="object.category_id.name or ''"/></li>
+                    <li><strong>Expiry Date:</strong> <t t-out="object.expiry_date or ''"/></li>
+                    <li><strong>Days Remaining:</strong> <t t-out="object.days_remaining or 0"/></li>
+                </ul>
+                <p>Please take the necessary action to renew or update this document.</p>
+                <p>Regards,<br/>Compliance Manager</p>
+            </div>
+        </field>
+        <field name="lang">{{ object.responsible_user_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

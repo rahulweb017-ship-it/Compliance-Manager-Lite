@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="compliance_manager_lite.Dashboard">
+        <div class="o_compliance_dashboard o_action p-4 overflow-auto h-100">
+            <!-- Header Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+                <div>
+                    <h2 class="fw-bold m-0 o_cml_title_main">Compliance Hub</h2>
+                    <p class="text-muted m-0 mt-1">Sleek multi-metric tracking, category ratios, and active alerts.</p>
+                </div>
+                <button class="btn btn-primary d-flex align-items-center gap-2 shadow-sm o_cml_view_btn" t-on-click="openAll">
+                    <i class="oi oi-view-list"/> View Documents
+                </button>
+            </div>
+
+            <!-- Loader -->
+            <t t-if="state.loading">
+                <div class="d-flex flex-column justify-content-center align-items-center p-5 m-5">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="text-muted fw-semibold">Loading dashboard...</span>
+                </div>
+            </t>
+
+            <!-- Main Content -->
+            <t t-else="">
+                <!-- Three-column layout matching the top portion of the Devoria reference image -->
+                <div class="row g-4 mb-4">
+                    <!-- Column 1: My categories (Card/Folder style visual categories) -->
+                    <div class="col-12 col-lg-8">
+                        <div class="o_cml_glass_card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                    <span class="o_cml_card_icon_wrap"><i class="fa fa-folder-open-o"/></span>
+                                    My categories
+                                </h5>
+                                <button class="btn btn-sm o_cml_header_btn hover-text-primary border-0 bg-transparent fw-bold" t-on-click="openCategories">
+                                    Browse Categories <i class="fa fa-chevron-right ms-1 small"/>
+                                </button>
+                            </div>
+
+                            <t t-if="!state.categories || state.categories.length === 0">
+                                <div class="text-center text-muted py-5">
+                                    <i class="fa fa-info-circle fa-2x mb-2 text-muted"/>
+                                    <p class="m-0">No category data recorded yet.</p>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="row g-3">
+                                    <!-- Loop up to first 3 categories to replicate the 3 gradient folder columns -->
+                                    <t t-foreach="state.categories.slice(0, 3)" t-as="cat" t-key="cat.id">
+                                        <div class="col-12 col-md-4">
+                                            <div t-attf-class="o_cml_folder_card o_cml_folder_#{cat_index % 3} p-3 d-flex flex-column justify-content-between" t-on-click="() => this.openRecords([['category_id', '=', cat.id]], cat.name)">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div class="o_cml_folder_badge">
+                                                        <t t-if="cat.expired &gt; 0">
+                                                            <span class="badge bg-danger rounded-pill">Expired</span>
+                                                        </t>
+                                                        <t t-elif="cat.expiring &gt; 0">
+                                                            <span class="badge bg-warning text-dark rounded-pill">Expiring</span>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="badge bg-success rounded-pill">Valid</span>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4">
+                                                    <h6 class="text-white fw-bold mb-1 text-truncate" t-esc="cat.name"/>
+                                                    <div class="d-flex justify-content-between align-items-end mt-2">
+                                                        <span class="o_cml_folder_progress_txt">
+                                                            <t t-esc="cat.total ? Math.round(cat.valid / cat.total * 100) : 0"/>% Valid
+                                                        </span>
+                                                        <span class="o_cml_folder_docs_txt text-white-50 small">
+                                                            <t t-esc="cat.total"/> document(s)
+                                                        </span>
+                                                    </div>
+                                                    <div class="progress mt-2" style="height: 6px; background-color: rgba(255,255,255,0.15);">
+                                                        <t t-set="valid_p" t-value="cat.total ? (cat.valid / cat.total * 100) : 0"/>
+                                                        <div class="progress-bar bg-white" role="progressbar" t-att-style="'width: ' + valid_p + '%'"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: My Progress -> Status Distribution Doughnut Chart -->
+                    <div class="col-12 col-lg-4">
+                        <div class="o_cml_glass_card p-4 h-100 d-flex flex-column justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                    <span class="o_cml_card_icon_wrap"><i class="fa fa-pie-chart"/></span>
+                                    My Progress
+                                </h5>
+                                <span class="text-muted small fw-bold">Status Overview</span>
+                            </div>
+
+                            <div class="row align-items-center g-3 my-auto py-2">
+                                <div class="col-6 d-flex justify-content-center">
+                                    <div class="chart-container position-relative" style="width: 140px; height: 140px;">
+                                        <canvas t-ref="statusPieChart"/>
+                                        <div class="o_cml_chart_center_text d-flex flex-column align-items-center justify-content-center">
+                                            <span class="o_cml_pct_val fw-bold">
+                                                <t t-esc="state.total ? Math.round(state.valid / state.total * 100) : 0"/>%
+                                            </span>
+                                            <span class="o_cml_pct_lbl">Overall</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="d-flex justify-content-between align-items-center text-muted py-1" t-on-click="openValid" style="cursor: pointer;">
+                                            <span class="small d-flex align-items-center gap-2">
+                                                <span class="o_cml_dot bg-neon-emerald"/> Valid
+                                            </span>
+                                            <span class="fw-bold text-dark small" t-esc="state.valid"/>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center text-muted py-1" t-on-click="openExpiring" style="cursor: pointer;">
+                                            <span class="small d-flex align-items-center gap-2">
+                                                <span class="o_cml_dot bg-alert-orange"/> Expiring
+                                            </span>
+                                            <span class="fw-bold text-dark small" t-esc="state.expiring"/>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center text-muted py-1" t-on-click="openExpired" style="cursor: pointer;">
+                                            <span class="small d-flex align-items-center gap-2">
+                                                <span class="o_cml_dot bg-cyberpunk-purple"/> Expired
+                                            </span>
+                                            <span class="fw-bold text-dark small" t-esc="state.expired"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-muted small text-center mt-3 pt-2 border-top border-secondary border-opacity-10">
+                                Based on <t t-esc="state.total"/> total tracked compliance records
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lower Layout: My Schedule & My Tasks style containers -->
+                <div class="row g-4">
+                    <!-- Column 1: Schedule style upcoming list -->
+                    <div class="col-12 col-lg-8">
+                        <div class="o_cml_glass_card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                    <span class="o_cml_card_icon_wrap"><i class="fa fa-calendar"/></span>
+                                    My Schedule
+                                </h5>
+                                <span class="text-muted small fw-bold">Upcoming Expiries</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover o_cml_light_table mb-0">
+                                    <thead>
+                                        <tr class="text-muted">
+                                            <th class="ps-3 py-3 border-0">Document Name</th>
+                                            <th class="py-3 border-0">Category</th>
+                                            <th class="py-3 border-0">Expiry Date</th>
+                                            <th class="py-3 border-0 text-center">Remaining</th>
+                                            <th class="pe-3 py-3 border-0 text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="!state.upcoming || state.upcoming.length === 0">
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted py-5">No upcoming expiries found.</td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr t-foreach="state.upcoming" t-as="rec" t-key="rec.id" class="o_cml_row_clickable" t-on-click="() => this.openRecordDetail(rec.id)">
+                                                <td class="ps-3 py-3 text-dark fw-semibold"><t t-esc="rec.name"/></td>
+                                                <td class="py-3"><span class="badge bg-light text-dark border border-secondary border-opacity-10"><t t-esc="rec.category_name"/></span></td>
+                                                <td class="py-3 text-muted" t-esc="rec.expiry_date"/>
+                                                <td class="py-3 text-center text-dark">
+                                                    <span class="fw-bold"><t t-esc="rec.days_remaining"/> days</span>
+                                                </td>
+                                                <td class="pe-3 py-3 text-center">
+                                                    <span t-attf-class="badge rounded-pill bg-#{ rec.status === 'valid' ? 'success' : 'warning' } text-#{ rec.status === 'valid' ? 'white' : 'dark' }">
+                                                        <t t-esc="rec.status === 'valid' ? 'Valid' : 'Expiring Soon'"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: My Tasks style list (critical item cards) -->
+                    <div class="col-12 col-lg-4">
+                        <div class="o_cml_glass_card p-4 h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                        <span class="o_cml_card_icon_wrap"><i class="fa fa-tasks"/></span>
+                                        My Tasks
+                                    </h5>
+                                    <span class="badge bg-danger rounded-pill"><t t-esc="state.expired"/> critical</span>
+                                </div>
+
+                                <div class="d-flex flex-column gap-3">
+                                    <t t-if="!state.recent_expired || state.recent_expired.length === 0">
+                                        <div class="text-center text-muted py-5">
+                                            <i class="fa fa-check-circle-o fa-2x mb-2 text-success"/>
+                                            <p class="m-0 small">No expired or critical tasks pending.</p>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-foreach="state.recent_expired" t-as="rec" t-key="rec.id">
+                                            <div class="o_cml_task_bar_card p-3 d-flex flex-column justify-content-between" t-on-click="() => this.openRecordDetail(rec.id)" style="cursor: pointer;">
+                                                <div>
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <span class="o_cml_task_title text-white fw-bold text-truncate" t-esc="rec.name"/>
+                                                        <i class="fa fa-external-link text-white-50 small mt-1"/>
+                                                    </div>
+                                                    <span class="o_cml_task_desc text-white-50 small d-block mt-1">Category: <t t-esc="rec.category_name"/></span>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <!-- Replicate the tiny progress bars in Devoria tasks -->
+                                                    <div class="progress" style="height: 4px; background-color: rgba(255,255,255,0.1);">
+                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"/>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                                        <span class="text-danger small fw-bold">Overdue: <t t-esc="Math.abs(rec.days_remaining)"/> days</span>
+                                                        <span class="text-white-50 small">Due <t t-esc="rec.expiry_date"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytical Ratios: 2-column layout (chart + compliance score leaderboard) -->
+                <div class="row g-4 mt-2">
+                    <div class="col-12 col-lg-8">
+                        <div class="o_cml_glass_card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                    <span class="o_cml_card_icon_wrap"><i class="fa fa-bar-chart"/></span>
+                                    Analytical Ratios by Category
+                                </h5>
+                                <span class="text-muted small fw-bold">Documents Breakdown</span>
+                            </div>
+                            <t t-if="!state.categories || state.categories.length === 0">
+                                <div class="text-center text-muted py-5">
+                                    <i class="fa fa-bar-chart fa-2x mb-2 text-muted"/>
+                                    <p class="m-0">No category records to chart.</p>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="o_cml_chart_container" style="height: 300px; position: relative;">
+                                    <canvas t-ref="categoryBarChart"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Right: Compliance Score Leaderboard -->
+                    <div class="col-12 col-lg-4">
+                        <div class="o_cml_glass_card p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="m-0 fw-bold d-flex align-items-center gap-2 o_cml_card_title">
+                                    <span class="o_cml_card_icon_wrap"><i class="fa fa-trophy"/></span>
+                                    Compliance Scores
+                                </h5>
+                                <span class="text-muted small fw-bold">By Category</span>
+                            </div>
+                            <t t-if="!state.categories || state.categories.length === 0">
+                                <div class="text-center text-muted py-5">
+                                    <i class="fa fa-trophy fa-2x mb-2 text-muted"/>
+                                    <p class="m-0">No scores to display yet.</p>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="d-flex flex-column gap-3">
+                                    <t t-foreach="state.categories" t-as="cat" t-key="cat.id">
+                                        <t t-set="score" t-value="cat.total ? Math.round(cat.valid / cat.total * 100) : 0"/>
+                                        <div class="o_cml_score_row d-flex align-items-center gap-3" t-on-click="() => this.openRecords([['category_id', '=', cat.id]], cat.name)">
+                                            <div t-attf-class="o_cml_score_ring o_cml_score_#{ score >= 75 ? 'high' : (score >= 40 ? 'mid' : 'low') }">
+                                                <span><t t-esc="score"/>%</span>
+                                            </div>
+                                            <div class="flex-grow-1 min-w-0">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="o_cml_score_name text-truncate" t-esc="cat.name"/>
+                                                    <span class="o_cml_score_docs text-muted small"><t t-esc="cat.total"/> docs</span>
+                                                </div>
+                                                <div class="progress mt-2 o_cml_score_bar">
+                                                    <div t-attf-class="progress-bar o_cml_score_fill_#{ score >= 75 ? 'high' : (score >= 40 ? 'mid' : 'low') }" role="progressbar" t-att-style="'width: ' + score + '%'"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
