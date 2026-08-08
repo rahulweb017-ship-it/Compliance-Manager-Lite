@@ -1,6 +1,6 @@
 {
     "name": "Compliance Manager Lite",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Services/Compliance",
     "summary": "Track compliance documents, expiry dates and automatic reminders.",
     "description": """
@@ -10,8 +10,9 @@ Track compliance records such as employee documents, vehicle insurance,
 contracts, licenses and certifications. Get automatic expiry status,
 scheduled email reminders, a KPI dashboard, calendar view and PDF/XLSX reports.
 """,
-    "author": "Compliance Manager",
-    "website": "https://www.odoo.com",
+    "author": "Softdeviser",
+    "website": "https://softdeviser.com/",
+    "support": "rahul@softdeviser.com",
     "license": "LGPL-3",
     "depends": ["base", "mail", "web"],
     "data": [
