@@ -1,6 +1,6 @@
 {
     "name": "Compliance Manager Lite",
-    "version": "19.0.1.0.2",
+    "version": "19.0.1.0.3",
     "category": "Services/Compliance",
     "summary": "Track compliance documents, expiry dates and automatic reminders.",
     "description": """
@@ -37,7 +37,13 @@ scheduled email reminders, a KPI dashboard, calendar view and PDF/XLSX reports.
             "compliance_manager_lite/static/src/xml/dashboard.xml",
         ],
     },
-    "images": ["static/description/banner.png"],
+    "images": [
+        "static/description/banner.gif",
+        "static/description/dashboard.png",
+        "static/description/list.png",
+        "static/description/calendar.png",
+        "static/description/form.png",
+    ],
     "installable": True,
     "application": True,
 }
