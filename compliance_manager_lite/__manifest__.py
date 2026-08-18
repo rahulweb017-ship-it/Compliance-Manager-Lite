@@ -1,6 +1,6 @@
 {
     "name": "Compliance Manager Lite",
-    "version": "19.0.1.0.5",
+    "version": "18.0.1.0.5",
     "category": "Services/Compliance",
     "summary": "Track compliance documents, expiry dates and automatic reminders.",
     "description": """
