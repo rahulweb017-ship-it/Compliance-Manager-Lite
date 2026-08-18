@@ -220,7 +220,7 @@ export class ComplianceDashboard extends Component {
             res_model: "compliance.record",
             domain: domain,
             views: [
-                [false, "list"],
+                [false, "tree"],
                 [false, "form"],
             ],
             target: "current",
@@ -243,7 +243,7 @@ export class ComplianceDashboard extends Component {
             name: "Categories",
             res_model: "compliance.category",
             views: [
-                [false, "list"],
+                [false, "tree"],
                 [false, "form"],
             ],
             target: "current",

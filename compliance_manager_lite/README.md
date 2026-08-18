@@ -41,6 +41,6 @@ expiry date is updated, so renewals start a fresh reminder cycle.
 
 ## Technical
 
-- Compatible with Odoo 18.0 and 19.0.
+- Compatible with Odoo 17.0.
 - License: LGPL-3.
 - Dependencies: `base`, `mail`, `web` (XLSX uses the bundled `xlsxwriter`).
