@@ -10,8 +10,10 @@
                   decoration-warning="status == 'expiring'"
                   decoration-danger="status == 'expired'">
                 <field name="name"/>
+                <field name="reference" optional="show"/>
                 <field name="category_id"/>
                 <field name="responsible_user_id"/>
+                <field name="department_id" optional="hide"/>
                 <field name="issue_date" optional="hide"/>
                 <field name="expiry_date"/>
                 <field name="days_remaining"/>
@@ -19,6 +21,7 @@
                        decoration-success="status == 'valid'"
                        decoration-warning="status == 'expiring'"
                        decoration-danger="status == 'expired'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>
@@ -35,27 +38,70 @@
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Driver License - John"/></h1>
                     </div>
-                    <group>
+                    <group string="General Information">
                         <group>
                             <field name="category_id"/>
+                            <field name="reference" placeholder="e.g. VH-1024"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Responsibility">
+                        <group>
                             <field name="responsible_user_id"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                        </group>
+                    </group>
+                    <group string="Validity">
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                        </group>
+                        <group>
+                            <field name="expiry_label"/>
+                            <field name="days_remaining"/>
                             <field name="status" widget="badge"
                                    decoration-success="status == 'valid'"
                                    decoration-warning="status == 'expiring'"
                                    decoration-danger="status == 'expired'"/>
                         </group>
-                        <group>
-                            <field name="issue_date"/>
-                            <field name="expiry_date"/>
-                            <field name="days_remaining"/>
-                        </group>
                     </group>
-                    <group string="Description">
-                        <field name="description" nolabel="1" placeholder="Additional details..."/>
-                    </group>
-                    <group string="Attachments">
-                        <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
-                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"
+                                   placeholder="Additional details..."/>
+                        </page>
+                        <page string="Documents" name="documents">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                        <page string="Reminders" name="reminders">
+                            <div class="text-muted mb-2">
+                                Reminder intervals come from the category's schedule, or the
+                                global default when the category defines none.
+                            </div>
+                            <field name="reminder_log_ids" nolabel="1" readonly="1">
+                                <list string="Reminder History"
+                                      decoration-success="state == 'sent'"
+                                      decoration-danger="state == 'failed'"
+                                      decoration-muted="state == 'pending'">
+                                    <field name="scheduled_date"/>
+                                    <field name="days"/>
+                                    <field name="notification_type"/>
+                                    <field name="recipient_id"/>
+                                    <field name="recipient_email" optional="hide"/>
+                                    <field name="sent_date"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'sent'"
+                                           decoration-danger="state == 'failed'"/>
+                                    <field name="error_message" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>
@@ -67,21 +113,34 @@
         <field name="model">compliance.record</field>
         <field name="arch" type="xml">
             <search string="Compliance Records">
-                <field name="name"/>
+                <field name="name" string="Document"
+                       filter_domain="['|', ('name', 'ilike', self), ('reference', 'ilike', self)]"/>
+                <field name="reference"/>
                 <field name="category_id"/>
                 <field name="responsible_user_id"/>
+                <field name="department_id"/>
+                <filter name="filter_my" string="My Records"
+                        domain="[('responsible_user_id', '=', uid)]"/>
+                <separator/>
                 <filter name="filter_valid" string="Valid" domain="[('status', '=', 'valid')]"/>
                 <filter name="filter_expiring" string="Expiring Soon" domain="[('status', '=', 'expiring')]"/>
                 <filter name="filter_expired" string="Expired" domain="[('status', '=', 'expired')]"/>
                 <separator/>
-                <filter name="filter_my" string="My Records"
-                        domain="[('responsible_user_id', '=', uid)]"/>
+                <filter name="filter_expiring_this_month" string="Expiring This Month"
+                        domain="[('expiry_date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d')),
+                                 ('expiry_date', '&lt;', (context_today().replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_expiring_next_month" string="Expiring Next Month"
+                        domain="[('expiry_date', '&gt;=', (context_today().replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d')),
+                                 ('expiry_date', '&lt;', (context_today().replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter name="filter_expiry_date" string="Expiry Date" date="expiry_date"/>
                 <group>
                     <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
                     <filter name="group_responsible" string="Responsible" context="{'group_by': 'responsible_user_id'}"/>
+                    <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
                     <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
                     <filter name="group_expiry" string="Expiry Date" context="{'group_by': 'expiry_date'}"/>
                 </group>
             </search>
@@ -108,19 +167,20 @@
                 <field name="status"/>
                 <templates>
                     <t t-name="card">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_title">
-                                <strong><field name="name"/></strong>
-                            </div>
-                            <div class="o_kanban_record_subtitle">
-                                <field name="category_id"/>
-                            </div>
-                            <div>
-                                <span>Expiry: <field name="expiry_date"/></span>
-                            </div>
-                            <div>
-                                <field name="responsible_user_id" widget="many2one_avatar_user"/>
-                            </div>
+                        <div class="o_kanban_record_title">
+                            <strong><field name="name"/></strong>
+                        </div>
+                        <div class="o_kanban_record_subtitle">
+                            <field name="category_id"/>
+                        </div>
+                        <div>
+                            <span>Expiry: <field name="expiry_date"/></span>
+                        </div>
+                        <div>
+                            <field name="expiry_label"/>
+                        </div>
+                        <div>
+                            <field name="responsible_user_id" widget="many2one_avatar_user"/>
                         </div>
                     </t>
                 </templates>
@@ -136,6 +196,18 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create your first compliance record</p>
             <p>Track documents and their expiry dates to stay compliant.</p>
+        </field>
+    </record>
+
+    <record id="action_compliance_record_my" model="ir.actions.act_window">
+        <field name="name">My Compliance</field>
+        <field name="res_model">compliance.record</field>
+        <field name="view_mode">list,kanban,form,calendar</field>
+        <field name="domain">[('responsible_user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_compliance_record_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nothing assigned to you yet</p>
+            <p>Documents where you are the responsible user will appear here.</p>
         </field>
     </record>
 

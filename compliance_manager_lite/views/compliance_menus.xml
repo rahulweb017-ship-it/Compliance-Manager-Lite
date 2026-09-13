@@ -13,6 +13,12 @@
               action="action_compliance_dashboard"
               sequence="10"/>
 
+    <menuitem id="menu_compliance_my"
+              name="My Compliance"
+              parent="menu_compliance_root"
+              action="action_compliance_record_my"
+              sequence="15"/>
+
     <menuitem id="menu_compliance_records"
               name="Compliance Records"
               parent="menu_compliance_root"
@@ -33,16 +39,28 @@
               sequence="40"/>
 
     <menuitem id="menu_compliance_reports"
-              name="Reports"
+              name="Reporting"
               parent="menu_compliance_root"
-              action="action_compliance_record"
+              groups="group_compliance_manager"
               sequence="50"/>
+
+    <menuitem id="menu_compliance_reminder_log"
+              name="Reminder History"
+              parent="menu_compliance_reports"
+              action="action_compliance_reminder_log"
+              sequence="10"/>
 
     <menuitem id="menu_compliance_config"
               name="Configuration"
               parent="menu_compliance_root"
               groups="group_compliance_manager"
               sequence="90"/>
+
+    <menuitem id="menu_compliance_config_reminder_rules"
+              name="Default Reminder Schedule"
+              parent="menu_compliance_config"
+              action="action_compliance_reminder_rule_global"
+              sequence="5"/>
 
     <menuitem id="menu_compliance_config_settings"
               name="Settings"

@@ -16,12 +16,38 @@
             <t t-call="web.external_layout">
                 <div class="page">
                     <h2>Compliance Records</h2>
+
+                    <!-- Summary of exactly the records this report was run on. -->
+                    <t t-set="valid_count" t-value="len(docs.filtered(lambda d: d.status == 'valid'))"/>
+                    <t t-set="expiring_count" t-value="len(docs.filtered(lambda d: d.status == 'expiring'))"/>
+                    <t t-set="expired_count" t-value="len(docs.filtered(lambda d: d.status == 'expired'))"/>
+                    <table class="table table-sm table-borderless w-50 mb-4">
+                        <tr>
+                            <td><strong>Total Documents</strong></td>
+                            <td class="text-end"><span t-out="len(docs)"/></td>
+                        </tr>
+                        <tr>
+                            <td>Valid</td>
+                            <td class="text-end"><span t-out="valid_count"/></td>
+                        </tr>
+                        <tr>
+                            <td>Expiring Soon</td>
+                            <td class="text-end"><span t-out="expiring_count"/></td>
+                        </tr>
+                        <tr>
+                            <td>Expired</td>
+                            <td class="text-end"><span t-out="expired_count"/></td>
+                        </tr>
+                    </table>
+
                     <table class="table table-sm o_main_table">
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Document</th>
                                 <th>Category</th>
+                                <th>Reference</th>
                                 <th>Responsible</th>
+                                <th>Department</th>
                                 <th>Issue Date</th>
                                 <th>Expiry Date</th>
                                 <th class="text-end">Days Left</th>
@@ -32,13 +58,13 @@
                             <tr t-foreach="docs" t-as="doc">
                                 <td><span t-field="doc.name"/></td>
                                 <td><span t-field="doc.category_id"/></td>
+                                <td><span t-field="doc.reference"/></td>
                                 <td><span t-field="doc.responsible_user_id"/></td>
+                                <td><span t-field="doc.department_id"/></td>
                                 <td><span t-field="doc.issue_date"/></td>
                                 <td><span t-field="doc.expiry_date"/></td>
                                 <td class="text-end"><span t-field="doc.days_remaining"/></td>
-                                <td>
-                                    <span t-field="doc.status"/>
-                                </td>
+                                <td><span t-field="doc.status"/></td>
                             </tr>
                         </tbody>
                     </table>

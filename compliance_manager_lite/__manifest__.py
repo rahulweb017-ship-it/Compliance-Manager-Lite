@@ -1,26 +1,30 @@
 {
     "name": "Compliance Manager Lite",
-    "version": "19.0.1.0.5",
+    "version": "19.0.1.1.0",
     "category": "Services/Compliance",
     "summary": "Track compliance documents, expiry dates and automatic reminders.",
     "description": """
 Compliance Manager Lite
 ========================
 Track compliance records such as employee documents, vehicle insurance,
-contracts, licenses and certifications. Get automatic expiry status,
-scheduled email reminders, a KPI dashboard, calendar view and PDF/XLSX reports.
+contracts, licenses and certifications. Get automatic expiry status, a
+configurable reminder schedule with full send history, a KPI dashboard,
+calendar view and PDF/XLSX reports.
 """,
     "author": "Softdeviser",
     "website": "https://softdeviser.com/",
     "support": "rahul@softdeviser.com",
     "license": "LGPL-3",
-    "depends": ["base", "mail", "web"],
+    "depends": ["base", "mail", "web", "hr"],
+    "external_dependencies": {"python": ["xlsxwriter"]},
+    "post_init_hook": "post_init_hook",
     "data": [
         "security/compliance_security.xml",
         "security/ir.model.access.csv",
         "data/mail_template_data.xml",
         "data/ir_cron_data.xml",
         "views/compliance_category_views.xml",
+        "views/compliance_reminder_views.xml",
         "views/compliance_record_views.xml",
         "views/res_config_settings_views.xml",
         "views/compliance_dashboard_views.xml",

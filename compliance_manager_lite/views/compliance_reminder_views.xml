@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Reminder rules -->
+
+    <record id="view_compliance_reminder_rule_list" model="ir.ui.view">
+        <field name="name">compliance.reminder.rule.list</field>
+        <field name="model">compliance.reminder.rule</field>
+        <field name="arch" type="xml">
+            <list string="Reminder Schedule" editable="bottom">
+                <field name="days"/>
+                <field name="category_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_compliance_reminder_rule_form" model="ir.ui.view">
+        <field name="name">compliance.reminder.rule.form</field>
+        <field name="model">compliance.reminder.rule</field>
+        <field name="arch" type="xml">
+            <form string="Reminder Rule">
+                <sheet>
+                    <group>
+                        <field name="days"/>
+                        <field name="category_id"
+                               placeholder="Leave empty for the global default schedule"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_compliance_reminder_rule_global" model="ir.actions.act_window">
+        <field name="name">Default Reminder Schedule</field>
+        <field name="res_model">compliance.reminder.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('category_id', '=', False)]</field>
+        <field name="context">{'default_category_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Set your default reminder schedule</p>
+            <p>
+                These intervals apply to every category that does not define a schedule
+                of its own. A category with its own rules overrides this list entirely.
+            </p>
+        </field>
+    </record>
+
+    <!-- Reminder history -->
+
+    <record id="view_compliance_reminder_log_list" model="ir.ui.view">
+        <field name="name">compliance.reminder.log.list</field>
+        <field name="model">compliance.reminder.log</field>
+        <field name="arch" type="xml">
+            <list string="Reminder History" create="false"
+                  decoration-success="state == 'sent'"
+                  decoration-danger="state == 'failed'"
+                  decoration-muted="state == 'pending'">
+                <field name="record_id"/>
+                <field name="category_id" optional="show"/>
+                <field name="days"/>
+                <field name="scheduled_date"/>
+                <field name="sent_date"/>
+                <field name="recipient_id"/>
+                <field name="recipient_email" optional="hide"/>
+                <field name="notification_type" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'sent'"
+                       decoration-danger="state == 'failed'"/>
+                <field name="error_message" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_compliance_reminder_log_search" model="ir.ui.view">
+        <field name="name">compliance.reminder.log.search</field>
+        <field name="model">compliance.reminder.log</field>
+        <field name="arch" type="xml">
+            <search string="Reminder History">
+                <field name="record_id"/>
+                <field name="recipient_id"/>
+                <field name="category_id"/>
+                <filter name="filter_sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="filter_failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <filter name="filter_pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <separator/>
+                <filter name="filter_scheduled" string="Scheduled Date" date="scheduled_date"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_record" string="Compliance Record" context="{'group_by': 'record_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_days" string="Reminder Days" context="{'group_by': 'days'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_compliance_reminder_log" model="ir.actions.act_window">
+        <field name="name">Reminder History</field>
+        <field name="res_model">compliance.reminder.log</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_compliance_reminder_log_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No reminders sent yet</p>
+            <p>Every reminder the daily scheduled action sends is recorded here.</p>
+        </field>
+    </record>
+
+</odoo>

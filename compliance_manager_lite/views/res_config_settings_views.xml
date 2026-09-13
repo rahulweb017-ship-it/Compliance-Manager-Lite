@@ -8,25 +8,28 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app string="Compliance Manager" name="compliance_manager_lite">
-                    <block title="Expiry Reminders" name="compliance_reminders">
-                        <setting string="Reminder Schedule"
-                                 help="Days before expiry when reminder emails are sent.">
+                    <block title="Expiry Status" name="compliance_status">
+                        <setting string="Expiring Soon Threshold"
+                                 help="A document counts as Expiring Soon once it is within this many days of its expiry date.">
                             <div class="content-group">
                                 <div class="row mt8">
-                                    <label for="compliance_reminder_days_1" class="col-lg-6 o_light_label"/>
-                                    <field name="compliance_reminder_days_1"/>
+                                    <field name="compliance_expiring_soon_threshold"
+                                           class="col-lg-3"/>
+                                    <span class="col-lg-6 o_form_label">days before expiry</span>
                                 </div>
-                                <div class="row mt8">
-                                    <label for="compliance_reminder_days_2" class="col-lg-6 o_light_label"/>
-                                    <field name="compliance_reminder_days_2"/>
-                                </div>
-                                <div class="row mt8">
-                                    <label for="compliance_reminder_days_3" class="col-lg-6 o_light_label"/>
-                                    <field name="compliance_reminder_days_3"/>
-                                </div>
-                                <div class="row mt8">
-                                    <label for="compliance_reminder_days_4" class="col-lg-6 o_light_label"/>
-                                    <field name="compliance_reminder_days_4"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Expiry Reminders" name="compliance_reminders">
+                        <setting string="Reminder Schedule"
+                                 help="Reminder emails are sent this many days before expiry. Each category may override this with a schedule of its own.">
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <button name="action_open_reminder_rules"
+                                            type="object"
+                                            string="Configure Reminder Schedule"
+                                            class="btn-link"
+                                            icon="oi-arrow-right"/>
                                 </div>
                             </div>
                         </setting>
