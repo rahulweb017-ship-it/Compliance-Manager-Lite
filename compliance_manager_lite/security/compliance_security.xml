@@ -13,7 +13,7 @@
     </record>
 
     <record id="base.user_admin" model="res.users">
-        <field name="group_ids" eval="[(4, ref('group_compliance_manager'))]"/>
+        <field name="groups_id" eval="[(4, ref('group_compliance_manager'))]"/>
     </record>
 
     <record id="rule_compliance_record_user_own" model="ir.rule">

@@ -57,7 +57,11 @@
                         <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
                     </group>
                 </sheet>
-                <chatter/>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -107,7 +111,7 @@
             <kanban default_group_by="status">
                 <field name="status"/>
                 <templates>
-                    <t t-name="card">
+                    <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_record_title">
                                 <strong><field name="name"/></strong>
