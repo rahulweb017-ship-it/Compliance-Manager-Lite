@@ -1,15 +1,31 @@
 {
     "name": "Compliance Manager Lite",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.1.1",
     "category": "Services/Compliance",
-    "summary": "Track compliance documents, expiry dates and automatic reminders.",
+    "summary": "Document expiry tracking with automatic renewal reminders, dashboard and PDF/XLSX reports.",
     "description": """
 Compliance Manager Lite
-========================
-Track compliance records such as employee documents, vehicle insurance,
-contracts, licenses and certifications. Get automatic expiry status, a
-configurable reminder schedule with full send history, a KPI dashboard,
-calendar view and PDF/XLSX reports.
+=======================
+
+Document expiry tracking and automatic renewal reminders for Odoo.
+
+Track licences, contracts, certifications, insurance policies, vehicle
+documents and employee records in a single register. Every document gets an
+automatic colour-coded status (Valid, Expiring Soon, Expired) and a countdown
+to its expiry date.
+
+Key features:
+
+* Reminder schedules you define yourself, and a different schedule per category
+* Full reminder history with recipient, delivery status and any error
+* Configurable Expiring Soon threshold
+* KPI dashboard with clickable cards, plus calendar and kanban views
+* My Compliance view for each responsible user
+* Multi-company support through record rules
+* PDF report with summary totals, and XLSX export
+* Native Odoo chatter and scheduled activities on every document
+
+Free and open source under LGPL-3.
 """,
     "author": "Softdeviser",
     "website": "https://softdeviser.com/",
