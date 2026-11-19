@@ -1,29 +1,42 @@
 {
-    "name": "Compliance Manager Lite",
-    "version": "19.0.1.1.1",
+    "name": "Compliance Manager Lite - Document Expiry Tracking & Renewal Reminders",
+    "version": "19.0.1.1.2",
     "category": "Services/Compliance",
-    "summary": "Document expiry tracking with automatic renewal reminders, dashboard and PDF/XLSX reports.",
+    "summary": "Track expiry dates of licenses, certificates, contracts, insurance and employee documents. Automatic email renewal reminders, dashboard, PDF/Excel reports.",
     "description": """
 Compliance Manager Lite
 =======================
 
-Document expiry tracking and automatic renewal reminders for Odoo.
+Document expiry tracking and automatic renewal reminders for Odoo 17, 18, 19
+and 20 (Community and Enterprise).
 
-Track licences, contracts, certifications, insurance policies, vehicle
-documents and employee records in a single register. Every document gets an
-automatic colour-coded status (Valid, Expiring Soon, Expired) and a countdown
-to its expiry date.
+Keep every license (licence), permit, certificate, contract, insurance policy,
+vehicle document and employee document in one register. Each document gets an
+automatic expiration status (Valid, Expiring Soon, Expired) and a countdown to
+its expiry date, and the responsible person receives an email renewal reminder
+before it lapses.
+
+Typical uses:
+
+* Employee document expiry: passports, visas, work permits, driving licenses,
+  medical and training certificates
+* Certificate expiry tracking: ISO 9001 / ISO 14001, calibration, inspection
+  and safety certificates
+* Contract renewal reminders: vendor contracts, leases, subscriptions, NDAs
+* Fleet and vehicle documents: insurance, registration, road tax, emissions
+* Business licenses and permits
 
 Key features:
 
-* Reminder schedules you define yourself, and a different schedule per category
+* Reminder schedules you define yourself (default 90, 60, 30, 15, 7 and 1 day
+  before expiry), with a different schedule per category
 * Full reminder history with recipient, delivery status and any error
 * Configurable Expiring Soon threshold
-* KPI dashboard with clickable cards, plus calendar and kanban views
+* KPI dashboard with clickable cards, plus list, kanban and calendar views
 * My Compliance view for each responsible user
 * Multi-company support through record rules
-* PDF report with summary totals, and XLSX export
-* Native Odoo chatter and scheduled activities on every document
+* PDF report with summary totals, and Excel (XLSX) export
+* Native Odoo chatter, attachments and scheduled activities on every document
 
 Free and open source under LGPL-3.
 """,

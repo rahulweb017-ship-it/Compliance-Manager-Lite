@@ -1,8 +1,15 @@
-# Compliance Manager Lite
+# Compliance Manager Lite - Document Expiry Tracking & Renewal Reminders for Odoo
 
-Track compliance documents and never miss an expiry date again. Compliance
-Manager Lite is a free, lightweight Odoo app for managing licenses, contracts,
-certifications, insurance and any document that expires.
+Document expiry tracking and automatic renewal reminders for Odoo 17, 18, 19
+and 20. Compliance Manager Lite is a free, lightweight Odoo app for tracking the
+expiration dates of licenses, permits, certificates, contracts, insurance
+policies, vehicle documents and employee documents, and for emailing the
+responsible person before anything lapses.
+
+Common uses: employee document expiry (passports, visas, work permits, driving
+licenses), certificate expiry tracking (ISO, calibration, inspection), contract
+renewal reminders, fleet and vehicle insurance renewals, and business license
+and permit tracking.
 
 ## Overview
 
@@ -123,11 +130,17 @@ Yes, for the Department field.
 
 ## Technical
 
-- Compatible with Odoo 19.0 (Community and Enterprise).
+- Compatible with Odoo 17.0, 18.0, 19.0 and 20.0 (Community and Enterprise).
 - License: LGPL-3.
 - Dependencies: `base`, `mail`, `web`, `hr`; Python `xlsxwriter`.
 
 ## Changelog
+
+### v1.1.2
+
+* Odoo 20.0 support
+* Version 1.1 now available on Odoo 17.0 and 18.0 as well
+* Store listing refreshed
 
 ### v1.1.0
 
