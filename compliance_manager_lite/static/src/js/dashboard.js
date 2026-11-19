@@ -63,6 +63,8 @@ export class ComplianceDashboard extends Component {
             this.state.valid = data.valid;
             this.state.expiring = data.expiring;
             this.state.expired = data.expired;
+            this.state.expiring_this_month = data.expiring_this_month || 0;
+            this.state.expired_this_month = data.expired_this_month || 0;
             this.state.categories = data.categories || [];
             this.state.upcoming = data.upcoming || [];
             this.state.recent_expired = data.recent_expired || [];
