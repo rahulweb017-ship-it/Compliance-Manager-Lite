@@ -29,7 +29,7 @@
                                             type="object"
                                             string="Configure Reminder Schedule"
                                             class="btn-link"
-                                            icon="oi-arrow-right"/>
+                                            icon="east"/>
                                 </div>
                             </div>
                         </setting>

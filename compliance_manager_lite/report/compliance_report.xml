@@ -6,7 +6,6 @@
         <field name="model">compliance.record</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">compliance_manager_lite.report_compliance_record</field>
-        <field name="report_file">compliance_manager_lite.report_compliance_record</field>
         <field name="binding_model_id" ref="model_compliance_record"/>
         <field name="binding_type">report</field>
     </record>

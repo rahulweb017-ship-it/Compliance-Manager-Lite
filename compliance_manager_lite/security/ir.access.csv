@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_compliance_category_user,compliance.category.user,compliance.category,group_compliance_user,r,
+access_compliance_category_manager,compliance.category.manager,compliance.category,group_compliance_manager,crud,
+access_compliance_record_user,Compliance: users manage their assigned records,compliance.record,group_compliance_user,cru,"[('responsible_user_id', '=', user.id)]"
+access_compliance_record_manager,Compliance: managers see all records,compliance.record,group_compliance_manager,crud,
+access_compliance_reminder_rule_user,compliance.reminder.rule.user,compliance.reminder.rule,group_compliance_user,r,
+access_compliance_reminder_rule_manager,compliance.reminder.rule.manager,compliance.reminder.rule,group_compliance_manager,crud,
+access_compliance_reminder_log_user,compliance.reminder.log.user,compliance.reminder.log,group_compliance_user,r,
+access_compliance_reminder_log_manager,compliance.reminder.log.manager,compliance.reminder.log,group_compliance_manager,crud,
+rule_compliance_record_company,Compliance: multi-company,compliance.record,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+rule_compliance_reminder_log_company,Compliance reminder history: multi-company,compliance.reminder.log,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

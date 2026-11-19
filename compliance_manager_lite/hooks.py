@@ -20,5 +20,5 @@ def post_init_hook(env):
     # relying on the field default alone.
     param = env["ir.config_parameter"].sudo()
     key = "compliance_manager_lite.expiring_soon_threshold"
-    if not param.get_param(key):
-        param.set_param(key, str(DEFAULT_EXPIRING_THRESHOLD))
+    if not param.get_int(key):
+        param.set_int(key, DEFAULT_EXPIRING_THRESHOLD)

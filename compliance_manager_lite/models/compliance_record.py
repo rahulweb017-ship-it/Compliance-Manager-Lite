@@ -111,14 +111,11 @@ class ComplianceRecord(models.Model):
     @api.model
     def _get_expiring_threshold(self):
         """Days before expiry at which a document starts counting as Expiring Soon."""
-        param = self.env["ir.config_parameter"].sudo().get_param(
+        # get_int() returns the default for a missing or non-integer value.
+        threshold = self.env["ir.config_parameter"].sudo().get_int(
             "compliance_manager_lite.expiring_soon_threshold",
             DEFAULT_EXPIRING_THRESHOLD,
         )
-        try:
-            threshold = int(param)
-        except (TypeError, ValueError):
-            threshold = DEFAULT_EXPIRING_THRESHOLD
         return threshold if threshold > 0 else DEFAULT_EXPIRING_THRESHOLD
 
     @api.model

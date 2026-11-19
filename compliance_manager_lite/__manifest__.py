@@ -1,6 +1,6 @@
 {
     "name": "Compliance Manager Lite - Document Expiry Tracking & Renewal Reminders",
-    "version": "19.0.1.1.2",
+    "version": "20.0.1.1.2",
     "category": "Services/Compliance",
     "summary": "Track expiry dates of licenses, certificates, contracts, insurance and employee documents. Automatic email renewal reminders, dashboard, PDF/Excel reports.",
     "description": """
@@ -49,7 +49,7 @@ Free and open source under LGPL-3.
     "post_init_hook": "post_init_hook",
     "data": [
         "security/compliance_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/mail_template_data.xml",
         "data/ir_cron_data.xml",
         "views/compliance_category_views.xml",

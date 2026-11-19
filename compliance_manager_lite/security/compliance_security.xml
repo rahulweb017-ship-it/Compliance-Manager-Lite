@@ -25,54 +25,10 @@
     </data>
 
     <!--
-        Record rules are deliberately updatable. They are security logic that has to
-        track the module code: under noupdate an upgraded database would keep the
-        old rules while the new ACLs applied, so what ships and what runs would drift.
+        Odoo 20 merged access rights and record rules into ir.access: see
+        ir.access.csv. Rows with a group are permissions (OR-ed), rows without a
+        group are restrictions (AND-ed), which is how the multi-company rules
+        apply to everyone, managers included.
     -->
-    <data>
-
-        <record id="rule_compliance_record_user_own" model="ir.rule">
-            <field name="name">Compliance: users manage their assigned records</field>
-            <field name="model_id" ref="model_compliance_record"/>
-            <field name="domain_force">[('responsible_user_id', '=', user.id)]</field>
-            <field name="groups" eval="[(4, ref('group_compliance_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="rule_compliance_record_manager_all" model="ir.rule">
-            <field name="name">Compliance: managers see all records</field>
-            <field name="model_id" ref="model_compliance_record"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_compliance_manager'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-
-        <!--
-            Multi-company isolation. Global rules (no groups) apply to everyone and
-            are ANDed with the ownership rules above, so even a manager never sees a
-            record belonging to a company they are not allowed into.
-        -->
-
-        <record id="rule_compliance_record_company" model="ir.rule">
-            <field name="name">Compliance: multi-company</field>
-            <field name="model_id" ref="model_compliance_record"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-            <field name="global" eval="True"/>
-        </record>
-
-        <record id="rule_compliance_reminder_log_company" model="ir.rule">
-            <field name="name">Compliance reminder history: multi-company</field>
-            <field name="model_id" ref="model_compliance_reminder_log"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-            <field name="global" eval="True"/>
-        </record>
-
-    </data>
 
 </odoo>
