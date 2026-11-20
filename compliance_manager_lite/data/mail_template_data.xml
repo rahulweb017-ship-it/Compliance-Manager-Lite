@@ -4,23 +4,91 @@
     <record id="mail_template_compliance_reminder" model="mail.template">
         <field name="name">Compliance: Expiry Reminder</field>
         <field name="model_id" ref="model_compliance_record"/>
-        <field name="subject">Compliance reminder: {{ object.name }} expires in {{ object.days_remaining }} day(s)</field>
-        <field name="email_from">{{ (object.responsible_user_id.company_id.email or user.email or '') }}</field>
+        <field name="subject">Compliance Document Expiring Soon - {{ object.name }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email or '') }}</field>
         <field name="email_to">{{ object.responsible_user_id.email }}</field>
         <field name="body_html" type="html">
             <div style="margin:0px;padding:0px;font-size:13px;">
                 <p>Hello <t t-out="object.responsible_user_id.name or ''"/>,</p>
-                <p>
-                    This is a reminder that the following compliance record is approaching its expiry date:
+                <p>The following compliance document is approaching its expiry date:</p>
+                <table style="border-collapse:collapse;margin:16px 0;">
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Document</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.name or ''"/></td>
+                    </tr>
+                    <tr t-if="object.reference">
+                        <td style="padding:4px 16px 4px 0;"><strong>Reference</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.reference"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Category</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.category_id.name or ''"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Expiry Date</strong></td>
+                        <td style="padding:4px 0;"><t t-out="format_date(object.expiry_date) or ''"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Days Remaining</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.days_remaining or 0"/></td>
+                    </tr>
+                </table>
+                <p>Please review and renew the document before it expires.</p>
+                <div style="margin:16px 0;">
+                    <a t-att-href="object._notify_get_action_link('view')"
+                       style="background-color:#714B67;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;">
+                        View Compliance Record
+                    </a>
+                </div>
+                <p>Regards,<br/><t t-out="object.company_id.name or 'Compliance Manager'"/></p>
+            </div>
+        </field>
+        <field name="lang">{{ object.responsible_user_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_compliance_expired" model="mail.template">
+        <field name="name">Compliance: Document Expired</field>
+        <field name="model_id" ref="model_compliance_record"/>
+        <field name="subject">Compliance Document Expired - {{ object.name }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email or '') }}</field>
+        <field name="email_to">{{ object.responsible_user_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0px;padding:0px;font-size:13px;">
+                <p>Hello <t t-out="object.responsible_user_id.name or ''"/>,</p>
+                <p style="color:#b02a37;">
+                    <strong>The following compliance document has expired.</strong>
                 </p>
-                <ul>
-                    <li><strong>Name:</strong> <t t-out="object.name or ''"/></li>
-                    <li><strong>Category:</strong> <t t-out="object.category_id.name or ''"/></li>
-                    <li><strong>Expiry Date:</strong> <t t-out="object.expiry_date or ''"/></li>
-                    <li><strong>Days Remaining:</strong> <t t-out="object.days_remaining or 0"/></li>
-                </ul>
-                <p>Please take the necessary action to renew or update this document.</p>
-                <p>Regards,<br/>Compliance Manager</p>
+                <table style="border-collapse:collapse;margin:16px 0;">
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Document</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.name or ''"/></td>
+                    </tr>
+                    <tr t-if="object.reference">
+                        <td style="padding:4px 16px 4px 0;"><strong>Reference</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.reference"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Category</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.category_id.name or ''"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Expired On</strong></td>
+                        <td style="padding:4px 0;"><t t-out="format_date(object.expiry_date) or ''"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:4px 16px 4px 0;"><strong>Status</strong></td>
+                        <td style="padding:4px 0;"><t t-out="object.expiry_label or ''"/></td>
+                    </tr>
+                </table>
+                <p>Please renew this document as soon as possible.</p>
+                <div style="margin:16px 0;">
+                    <a t-att-href="object._notify_get_action_link('view')"
+                       style="background-color:#714B67;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;">
+                        View Compliance Record
+                    </a>
+                </div>
+                <p>Regards,<br/><t t-out="object.company_id.name or 'Compliance Manager'"/></p>
             </div>
         </field>
         <field name="lang">{{ object.responsible_user_id.lang }}</field>

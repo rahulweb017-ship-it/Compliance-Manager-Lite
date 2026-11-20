@@ -19,6 +19,8 @@ export class ComplianceDashboard extends Component {
             valid: 0,
             expiring: 0,
             expired: 0,
+            expiring_this_month: 0,
+            expired_this_month: 0,
             categories: [],
             upcoming: [],
             recent_expired: [],
@@ -61,6 +63,8 @@ export class ComplianceDashboard extends Component {
             this.state.valid = data.valid;
             this.state.expiring = data.expiring;
             this.state.expired = data.expired;
+            this.state.expiring_this_month = data.expiring_this_month || 0;
+            this.state.expired_this_month = data.expired_this_month || 0;
             this.state.categories = data.categories || [];
             this.state.upcoming = data.upcoming || [];
             this.state.recent_expired = data.recent_expired || [];
@@ -264,6 +268,39 @@ export class ComplianceDashboard extends Component {
 
     openExpired() {
         this.openRecords([["status", "=", "expired"]], "Expired Records");
+    }
+
+    _monthBounds() {
+        const today = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        return {
+            today: iso(today),
+            monthStart: iso(new Date(today.getFullYear(), today.getMonth(), 1)),
+            nextMonthStart: iso(new Date(today.getFullYear(), today.getMonth() + 1, 1)),
+        };
+    }
+
+    openExpiringThisMonth() {
+        const { today, nextMonthStart } = this._monthBounds();
+        this.openRecords(
+            [
+                ["expiry_date", ">=", today],
+                ["expiry_date", "<", nextMonthStart],
+            ],
+            "Expiring This Month"
+        );
+    }
+
+    openExpiredThisMonth() {
+        const { today, monthStart } = this._monthBounds();
+        this.openRecords(
+            [
+                ["expiry_date", ">=", monthStart],
+                ["expiry_date", "<", today],
+            ],
+            "Expired This Month"
+        );
     }
 }
 

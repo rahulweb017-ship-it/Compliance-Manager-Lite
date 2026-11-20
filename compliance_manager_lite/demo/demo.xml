@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Categories -->
+
     <record id="demo_category_employee" model="compliance.category">
         <field name="name">Employee Documents</field>
         <field name="description">Contracts, IDs and HR documents.</field>
@@ -21,76 +23,117 @@
         <field name="name">Contracts</field>
         <field name="description">Vendor and client contracts.</field>
     </record>
+    <record id="demo_category_equipment" model="compliance.category">
+        <field name="name">Equipment Certificates</field>
+        <field name="description">Inspection and calibration certificates.</field>
+    </record>
 
-    <record id="demo_record_1" model="compliance.record">
-        <field name="name">Driver License - John Doe</field>
+    <!--
+        A category with its own reminder schedule, to demonstrate that per-category
+        rules override the global default.
+    -->
+    <record id="demo_rule_vehicle_90" model="compliance.reminder.rule">
+        <field name="days">90</field>
+        <field name="category_id" ref="demo_category_vehicle"/>
+    </record>
+    <record id="demo_rule_vehicle_60" model="compliance.reminder.rule">
+        <field name="days">60</field>
+        <field name="category_id" ref="demo_category_vehicle"/>
+    </record>
+    <record id="demo_rule_vehicle_30" model="compliance.reminder.rule">
+        <field name="days">30</field>
+        <field name="category_id" ref="demo_category_vehicle"/>
+    </record>
+    <record id="demo_rule_vehicle_7" model="compliance.reminder.rule">
+        <field name="days">7</field>
+        <field name="category_id" ref="demo_category_vehicle"/>
+    </record>
+
+    <!-- Valid documents -->
+
+    <record id="demo_record_passport" model="compliance.record">
+        <field name="name">Employee Passport - John Doe</field>
+        <field name="reference">PSP-4471</field>
         <field name="category_id" ref="demo_category_employee"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=300))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=120))"/>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=900))"/>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=420))"/>
+        <field name="description">Passport used for international travel.</field>
+    </record>
+
+    <record id="demo_record_iso" model="compliance.record">
+        <field name="name">ISO 9001 Certificate</field>
+        <field name="reference">ISO-9001-22</field>
+        <field name="category_id" ref="demo_category_cert"/>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=400))"/>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=330))"/>
+        <field name="description">Quality management system certification.</field>
+    </record>
+
+    <record id="demo_record_license" model="compliance.record">
+        <field name="name">Driving License - Jane Smith</field>
+        <field name="reference">DL-88210</field>
+        <field name="category_id" ref="demo_category_employee"/>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=700))"/>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=190))"/>
         <field name="description">Class B driving license.</field>
     </record>
-    <record id="demo_record_2" model="compliance.record">
-        <field name="name">Fleet Insurance - Van 01</field>
+
+    <!-- Expiring soon -->
+
+    <record id="demo_record_vehicle_insurance" model="compliance.record">
+        <field name="name">Vehicle Insurance - Fleet Van 01</field>
+        <field name="reference">VH-1024</field>
         <field name="category_id" ref="demo_category_vehicle"/>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=348))"/>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=17))"/>
+        <field name="description">Comprehensive cover for the delivery van.</field>
+    </record>
+
+    <record id="demo_record_pollution" model="compliance.record">
+        <field name="name">Pollution Certificate - Fleet Van 01</field>
+        <field name="reference">PUC-5512</field>
+        <field name="category_id" ref="demo_category_vehicle"/>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=175))"/>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=5))"/>
+        <field name="description">Emissions compliance certificate.</field>
+    </record>
+
+    <record id="demo_record_equipment" model="compliance.record">
+        <field name="name">Forklift Inspection Certificate</field>
+        <field name="reference">EQ-3390</field>
+        <field name="category_id" ref="demo_category_equipment"/>
         <field name="issue_date" eval="(DateTime.today() - timedelta(days=340))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=20))"/>
-        <field name="description">Comprehensive cover.</field>
+        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=24))"/>
+        <field name="description">Annual safety inspection for warehouse forklift.</field>
     </record>
-    <record id="demo_record_3" model="compliance.record">
-        <field name="name">Business Operating License</field>
-        <field name="category_id" ref="demo_category_license"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=350))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=6))"/>
-        <field name="description">City council operating permit.</field>
-    </record>
-    <record id="demo_record_4" model="compliance.record">
-        <field name="name">ISO 9001 Certification</field>
-        <field name="category_id" ref="demo_category_cert"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=700))"/>
-        <field name="expiry_date" eval="(DateTime.today() - timedelta(days=10))"/>
-        <field name="description">Quality management certification.</field>
-    </record>
-    <record id="demo_record_5" model="compliance.record">
-        <field name="name">Vendor Contract - Acme</field>
+
+    <!-- Expired -->
+
+    <record id="demo_record_vendor_insurance" model="compliance.record">
+        <field name="name">Vendor Insurance - Acme Supplies</field>
+        <field name="reference">VI-7702</field>
         <field name="category_id" ref="demo_category_contract"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=200))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=300))"/>
-        <field name="description">Annual supply agreement.</field>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=400))"/>
+        <field name="expiry_date" eval="(DateTime.today() - timedelta(days=35))"/>
+        <field name="description">Liability cover supplied by the vendor.</field>
     </record>
-    <record id="demo_record_6" model="compliance.record">
-        <field name="name">Fire Safety Certificate</field>
-        <field name="category_id" ref="demo_category_cert"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=360))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=1))"/>
-        <field name="description">Annual fire inspection.</field>
-    </record>
-    <record id="demo_record_7" model="compliance.record">
-        <field name="name">Employment Contract - Jane Roe</field>
+
+    <record id="demo_record_employment_contract" model="compliance.record">
+        <field name="name">Employment Contract - Temp Staff</field>
+        <field name="reference">EC-2291</field>
         <field name="category_id" ref="demo_category_employee"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=30))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=400))"/>
-        <field name="description">Permanent contract.</field>
-    </record>
-    <record id="demo_record_8" model="compliance.record">
-        <field name="name">Fleet Insurance - Truck 02</field>
-        <field name="category_id" ref="demo_category_vehicle"/>
         <field name="issue_date" eval="(DateTime.today() - timedelta(days=380))"/>
-        <field name="expiry_date" eval="(DateTime.today() - timedelta(days=5))"/>
-        <field name="description">Expired, needs renewal.</field>
+        <field name="expiry_date" eval="(DateTime.today() - timedelta(days=12))"/>
+        <field name="description">Fixed-term contract awaiting renewal.</field>
     </record>
-    <record id="demo_record_9" model="compliance.record">
-        <field name="name">Export License</field>
+
+    <record id="demo_record_trade_license" model="compliance.record">
+        <field name="name">Trade License</field>
+        <field name="reference">TL-1180</field>
         <field name="category_id" ref="demo_category_license"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=150))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=14))"/>
-        <field name="description">Customs export permit.</field>
-    </record>
-    <record id="demo_record_10" model="compliance.record">
-        <field name="name">Vendor Contract - Globex</field>
-        <field name="category_id" ref="demo_category_contract"/>
-        <field name="issue_date" eval="(DateTime.today() - timedelta(days=90))"/>
-        <field name="expiry_date" eval="(DateTime.today() + timedelta(days=45))"/>
-        <field name="description">Service agreement.</field>
+        <field name="issue_date" eval="(DateTime.today() - timedelta(days=760))"/>
+        <field name="expiry_date" eval="(DateTime.today() - timedelta(days=3))"/>
+        <field name="description">Municipal trade license pending renewal.</field>
     </record>
 
 </odoo>

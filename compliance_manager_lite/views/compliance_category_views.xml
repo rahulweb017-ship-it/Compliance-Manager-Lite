@@ -8,6 +8,7 @@
             <list string="Categories">
                 <field name="name"/>
                 <field name="record_count"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
                 <field name="description" optional="show"/>
             </list>
         </field>
@@ -29,6 +30,21 @@
                     <group string="Description">
                         <field name="description" nolabel="1"/>
                     </group>
+                    <notebook>
+                        <page string="Reminder Schedule" name="reminders">
+                            <div class="text-muted mb-2">
+                                Intervals used for documents in this category. Leave the
+                                list empty to fall back to the global default schedule.
+                            </div>
+                            <field name="reminder_rule_ids" nolabel="1"
+                                   context="{'default_category_id': id}">
+                                <list string="Reminder Schedule" editable="bottom">
+                                    <field name="days"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
