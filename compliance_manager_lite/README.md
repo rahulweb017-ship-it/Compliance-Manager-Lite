@@ -136,6 +136,10 @@ Yes, for the Department field.
 
 ## Changelog
 
+### v1.1.3
+
+* Store listing redesigned for readability and to display correctly on the Odoo Apps store
+
 ### v1.1.2
 
 * Odoo 20.0 support
