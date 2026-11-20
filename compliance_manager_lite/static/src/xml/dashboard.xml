@@ -132,6 +132,18 @@
                                             </span>
                                             <span class="fw-bold text-dark small" t-esc="state.expired"/>
                                         </div>
+                                        <div class="d-flex justify-content-between align-items-center text-muted py-1 border-top border-secondary border-opacity-10 pt-2" t-on-click="openExpiringThisMonth" style="cursor: pointer;">
+                                            <span class="small d-flex align-items-center gap-2">
+                                                <span class="o_cml_dot bg-alert-orange"/> Expiring This Month
+                                            </span>
+                                            <span class="fw-bold text-dark small" t-esc="state.expiring_this_month"/>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center text-muted py-1" t-on-click="openExpiredThisMonth" style="cursor: pointer;">
+                                            <span class="small d-flex align-items-center gap-2">
+                                                <span class="o_cml_dot bg-cyberpunk-purple"/> Expired This Month
+                                            </span>
+                                            <span class="fw-bold text-dark small" t-esc="state.expired_this_month"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
